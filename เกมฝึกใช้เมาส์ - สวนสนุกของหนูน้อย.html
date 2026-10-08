@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>เกมฝึกใช้เมาส์ - สวนสนุกของหนูน้อย</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mali:wght@500;700&display=swap">
+<style>
+:root{--bg:#dff2ff;--ink:#1d3557;--card:#fff;--sun:#ffc93c;--leaf:#4cb963;--coral:#ff6b6b;--sea:#3a86ff;--stage:#f4fbff;--line:#b9dcf5;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f2237;--ink:#eaf4ff;--card:#1a3550;--stage:#14304a;--line:#2d5578}}
+:root[data-theme="dark"]{--bg:#0f2237;--ink:#eaf4ff;--card:#1a3550;--stage:#14304a;--line:#2d5578}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Mali','Tahoma',sans-serif;min-height:100%;padding:14px}
+.app{max-width:900px;margin:0 auto}
+h1{font-size:clamp(1.4rem,4vw,2rem);margin:4px 0 12px;text-align:center}
+#tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+#tabs button{font:inherit;font-weight:700;font-size:1rem;background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:18px;padding:8px 14px;cursor:pointer;min-width:118px}
+#tabs button.on{background:var(--sun);border-color:var(--ink);color:#1d3557}
+#tabs button:focus-visible,.big:focus-visible{outline:4px solid var(--sea);outline-offset:2px}
+#bar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border-radius:20px;padding:10px 16px;margin-bottom:10px;border:3px solid var(--line)}
+#msg{font-size:clamp(1.05rem,2.6vw,1.4rem);font-weight:700;margin:0}
+#msg.bad{color:var(--coral)}
+#prog{font-size:1.5rem;white-space:nowrap;letter-spacing:2px}
+#stage{position:relative;height:400px;border-radius:24px;background:var(--stage);border:4px dashed var(--line);overflow:hidden;user-select:none;-webkit-user-select:none}
+.t{position:absolute;width:84px;height:84px;font-size:58px;line-height:84px;text-align:center;cursor:pointer;border-radius:50%;transition:transform .15s}
+.t:hover{transform:scale(1.12)}
+.t.pop{animation:pop .3s forwards;pointer-events:none}
+.t.shake{animation:shake .35s}
+.t.drag{cursor:grabbing;z-index:5;transition:none;touch-action:none}
+.t.back{transition:transform .3s}
+.t.fruit{cursor:grab;touch-action:none}
+.home{position:absolute;bottom:10px;margin-left:-70px;width:140px;height:110px;font-size:80px;line-height:110px;text-align:center;border-radius:20px;border:4px dashed var(--leaf)}
+.home.yes{animation:pop2 .3s}
+#sb{position:absolute;inset:0;overflow-y:scroll}
+#sb::-webkit-scrollbar{width:26px}
+#sb::-webkit-scrollbar-track{background:var(--line)}
+#sb::-webkit-scrollbar-thumb{background:var(--sea);border-radius:13px;border:4px solid var(--line)}
+#path{position:relative;height:1800px;background:linear-gradient(#9fd8ff 0%,#d7f1ff 35%,#a6e3a1 62%,#8d6e4a 100%)}
+#path span{position:absolute;font-size:52px}
+#gift{position:absolute;left:50%;bottom:50px;margin-left:-45px;font-size:80px;cursor:pointer;background:none;border:0;animation:bob 1s infinite}
+#hint5{position:absolute;right:46px;top:10px;font-size:2.6rem;pointer-events:none;animation:bob 1s infinite}
+#win{position:absolute;inset:0;background:color-mix(in srgb,var(--stage) 88%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:9;text-align:center}
+#win .em{font-size:80px}
+#win h2{margin:0;font-size:2rem}
+.big{font:inherit;font-weight:700;font-size:1.3rem;background:var(--leaf);color:#fff;border:0;border-radius:20px;padding:12px 28px;cursor:pointer}
+.big.alt{background:var(--sea)}
+@keyframes pop{to{transform:scale(1.6);opacity:0}}
+@keyframes pop2{50%{transform:scale(1.15)}}
+@keyframes shake{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+@keyframes bob{50%{transform:translateY(8px)}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
+@media (max-width:600px){#stage{height:360px}#tabs button{min-width:0;flex:1 1 40%}}
+#top{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;margin-bottom:10px}
+#top input{font:inherit;font-size:1.05rem;padding:8px 12px;border-radius:14px;border:3px solid var(--line);background:var(--card);color:var(--ink);width:190px}
+#dif{display:flex;gap:6px}
+.sm{font:inherit;font-weight:700;background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:14px;padding:8px 12px;cursor:pointer}
+.sm.on{background:var(--leaf);color:#fff;border-color:var(--ink)}
+#bar{flex-wrap:wrap}#tm{font-weight:700;font-size:1.2rem;white-space:nowrap}
+.t[data-k]::after{content:attr(data-k);position:absolute;left:0;right:0;top:100%;margin-top:-8px;font-size:24px;line-height:1}
+.modal{position:fixed;inset:0;background:var(--bg);z-index:20;overflow:auto;padding:16px}
+.box{max-width:700px;margin:0 auto;text-align:center}
+.box table{width:100%;border-collapse:collapse;margin:8px 0 16px}
+.box td,.box th{border:2px solid var(--line);padding:6px;background:var(--card)}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>🖱️ สวนสนุกหนูน้อยนักใช้เมาส์</h1>
+<div id="top"><label>👧 ชื่อ <input id="nm" list="names" maxlength="20" placeholder="พิมพ์ชื่อนักเรียน"></label><datalist id="names"></datalist><div id="dif"></div><button class="sm" id="sc">📊 คะแนน</button></div>
+<div id="tabs"></div>
+<div id="bar"><p id="msg"></p><div id="tm"></div><div id="prog"></div></div>
+<div id="stage"></div>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const L=[
+{n:'คลิกซ้าย',ic:'🫧',goal:6,msg:'กดปุ่มซ้ายของเมาส์ที่ฟองสบู่ ให้แตกให้หมด!'},
+{n:'คลิกขวา',ic:'⭐',goal:5,msg:'กดปุ่มขวาของเมาส์ที่ดาว เพื่อเก็บดาว!'},
+{n:'ดับเบิลคลิก',ic:'🥚',goal:5,msg:'กดปุ่มซ้ายเร็ว ๆ สองครั้งที่ไข่ ให้ลูกเจี๊ยบออกมา!'},
+{n:'ลากแล้ววาง',ic:'🍎',goal:4,msg:'กดปุ่มซ้ายค้างไว้ แล้วลากผลไม้ไปวางในตะกร้า!'},
+{n:'เลื่อนสกรอลล์',ic:'🎁',goal:2,msg:'หมุนลูกกลิ้งเมาส์เลื่อนลงไปหาของขวัญ แล้วกดที่ของขวัญ!'},
+{n:'ผสมทุกปุ่ม',ic:'🎯',goal:6,msg:'ดูเครื่องหมายใต้รูป 👈ซ้าย 👉ขวา ✌️สองครั้ง แล้วกดให้ถูกปุ่ม!'},
+{n:'เรียงเลข',ic:'🔢',goal:5,msg:'กดซ้ายที่ตัวเลขเรียงจาก 1 ไปเรื่อย ๆ!'},
+{n:'ลากแยกกลุ่ม',ic:'🐟',goal:6,msg:'ลากปลา 🐟 ไปทะเล 🌊 ลากนก 🐦 ไปต้นไม้ 🌳'}
+];
+const D=[{n:'ง่าย',e:'🌱',sz:88,add:0,mv:0},{n:'กลาง',e:'🌿',sz:68,add:2,mv:0},{n:'ยาก',e:'🌳',sz:52,add:4,mv:1}];
+let mvs=[],raf,lt,cur=0,got=0,dif=0,t0=0,iv,stage=$('#stage'),S={s:{},last:''};
+try{S=JSON.parse(localStorage.getItem('mg1'))||S}catch(e){}
+const save=()=>{try{localStorage.setItem('mg1',JSON.stringify(S))}catch(e){}};
+const name=()=>$('#nm').value.trim()||'ผู้เล่น';
+const rec=(i,d)=>(S.s[name()]||{})[i+'-'+d];
+const G=()=>L[cur].goal+(cur==4?0:D[dif].add);
+const shuf=a=>a.sort(()=>Math.random()-.5);
+const esc=s=>s.replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+function beep(f){try{const c=beep.c||(beep.c=new AudioContext()),o=c.createOscillator(),g=c.createGain();o.frequency.value=f||620;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.12,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.2);o.start();o.stop(c.currentTime+.2)}catch(e){}}
+function say(t,bad){const m=$('#msg');m.textContent=t;m.className=bad?'bad':''}
+function prog(){$('#prog').textContent='⭐'.repeat(got)+'☆'.repeat(G()-got)}
+function names(){const d=$('#names');d.innerHTML='';Object.keys(S.s).forEach(n=>{const o=document.createElement('option');o.value=n;d.appendChild(o)})}
+function tabs(){$('#tabs').innerHTML='';L.forEach((l,i)=>{const b=document.createElement('button');b.className=i==cur?'on':'';b.textContent=(rec(i,dif)?'✅ ':l.ic+' ')+(i+1)+'. '+l.n;b.onclick=()=>go(i);$('#tabs').appendChild(b)})}
+function difs(){$('#dif').innerHTML='';D.forEach((d,j)=>{const b=document.createElement('button');b.className='sm'+(j==dif?' on':'');b.textContent=d.e+' '+d.n;b.onclick=()=>{dif=j;go(cur)};$('#dif').appendChild(b)})}
+function start(){if(t0)return;t0=Date.now();iv=setInterval(()=>$('#tm').textContent='⏱ '+((Date.now()-t0)/1000).toFixed(1)+' วิ',200)}
+function hit(){got++;beep(500+got*50);prog();say(L[cur].msg);if(got>=G())setTimeout(win,450)}
+function win(){clearInterval(iv);cancelAnimationFrame(raf);const sec=t0?(Date.now()-t0)/1000:0,n=cur==4?8:G(),st=sec<=n*[5,4,3][dif]?3:sec<=n*[9,7,6][dif]?2:1,nm=name(),r=S.s[nm]||(S.s[nm]={}),key=cur+'-'+dif,o=r[key],nw=!o||st>o.st||(st==o.st&&sec<o.t);
+if(nw)r[key]={st,t:+sec.toFixed(1)};S.last=nm;save();names();tabs();
+const last=cur==L.length-1,w=document.createElement('div');w.id='win';
+w.innerHTML='<div class="em">'+(last?'🏆':'🎉')+'</div><h2>'+(last?'เก่งที่สุดเลย! ผ่านครบทุกด่าน':'เก่งมาก! ผ่านด่านแล้ว')+'</h2><div style="font-size:2.4rem">'+'⭐'.repeat(st)+'</div><p style="margin:0;font-size:1.2rem">ใช้เวลา '+sec.toFixed(1)+' วินาที'+(nw?' 🏅 ดีที่สุดของหนู!':'')+'</p>';
+const a=document.createElement('button');a.className='big';a.textContent=last?'เล่นใหม่ตั้งแต่ด่านแรก':'ด่านต่อไป ▶';a.onclick=()=>go(last?0:cur+1);
+const b=document.createElement('button');b.className='big alt';b.textContent='เล่นด่านนี้อีกครั้ง';b.onclick=()=>go(cur);
+w.append(a,b);stage.appendChild(w);beep(880);a.focus()}
+function shake(t){t.classList.remove('shake');void t.offsetWidth;t.classList.add('shake');setTimeout(()=>t.classList.remove('shake'),360)}
+function wrong(t,m){shake(t);say(m,1)}
+function pop(t){t.classList.add('pop');setTimeout(()=>t.remove(),300)}
+function make(e,k,n,h=88){const rows=Math.ceil(n/5),cols=Math.ceil(n/rows),r=Math.floor(k/cols),c=k%cols,s=Math.min(D[dif].sz,stage.clientWidth/cols*.85),j=()=>Math.random()-.5,t=document.createElement('div');t.className='t';t.textContent=e;
+Object.assign(t.style,{width:s+'px',height:s+'px',fontSize:s*.68+'px',lineHeight:s+'px',left:`calc(${(c+.5)/cols*100+j()*5}% - ${s/2}px)`,top:`calc(${(r+.5)/rows*h+j()*3}% - ${s/2-10}px)`});
+if(D[dif].mv&&h>60){mvs.push(t);const a=Math.random()*6.28,sp=40+Math.random()*30;t._v=[Math.cos(a)*sp,Math.sin(a)*sp]}
+stage.appendChild(t);return t}
+const E={l:['🫧','👈'],r:['⭐','👉'],d:['🥚','✌️']};
+const B={
+l:(t,ok)=>{t.onclick=()=>{pop(t);ok()};t.oncontextmenu=e=>{e.preventDefault();wrong(t,'ลองกดปุ่มซ้ายนะ 👈')}},
+r:(t,ok)=>{t.oncontextmenu=e=>{e.preventDefault();pop(t);ok()};t.onclick=()=>wrong(t,'ต้องกดปุ่มขวานะ 👉')},
+d:(t,ok)=>{let h=0;t.onclick=()=>{if(!h)wrong(t,'กดเร็ว ๆ สองครั้งติดกันนะ ✌️')};t.oncontextmenu=e=>{e.preventDefault();wrong(t,'ใช้ปุ่มซ้ายกดสองครั้งนะ')};t.ondblclick=()=>{if(h)return;h=1;t.textContent='🐥';beep(700);setTimeout(()=>{pop(t);ok()},500)}}};
+function home(em,left,g){const b=document.createElement('div');b.className='home';b.textContent=em;b.style.left=left;stage.appendChild(b);return{el:b,g}}
+function drag(t,homes){let sx,sy,on=0;t.classList.add('fruit');
+t.onpointerdown=e=>{if(e.button)return;on=1;sx=e.clientX;sy=e.clientY;t.setPointerCapture(e.pointerId);t.classList.remove('back');t.classList.add('drag')};
+t.onpointermove=e=>{if(on)t.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.15)`};
+t.onpointerup=e=>{if(!on)return;on=0;t.classList.remove('drag');const r=t.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,h=homes.find(h=>{const q=h.el.getBoundingClientRect();return x>q.left&&x<q.right&&y>q.top&&y<q.bottom});
+if(h&&h.g==t.dataset.g){t.style.display='none';h.el.classList.remove('yes');void h.el.offsetWidth;h.el.classList.add('yes');hit()}else{t.classList.add('back');t.style.transform='';say(h?'ผิดบ้านนะ ลองใหม่!':'ยังไม่ถึงที่หมาย ลองลากอีกที!',1)}}}
+function go(i){cancelAnimationFrame(raf);mvs=[];clearInterval(iv);t0=0;cur=i;got=0;stage.innerHTML='';stage.oncontextmenu=e=>e.preventDefault();stage.onpointerdown=start;stage.onwheel=start;tabs();difs();$('#tm').textContent='⏱ 0.0 วิ';const n=G();prog();say(L[i].msg);lt=0;raf=requestAnimationFrame(tick);
+if(i<3||i==5){const ty=i==5?shuf(Array.from({length:n},(_,k)=>'lrd'[k%3])):Array(n).fill('lrd'[i]);ty.forEach((c,k)=>{const t=make(E[c][0],k,n,i==5?80:88);B[c](t,hit);if(i==5)t.dataset.k=E[c][1]})}
+if(i==3){const h=[home('🧺','50%','x')];for(let k=0;k<n;k++){const t=make(['🍎','🍌','🍇','🍓','🍊'][k%5],k,n,50);t.dataset.g='x';drag(t,h)}}
+if(i==7){const h=[home('🌊','25%','f'),home('🌳','75%','b')];shuf(Array.from({length:n},(_,k)=>k%2)).forEach((v,k)=>{const t=make(v?'🐦':'🐟',k,n,50);t.dataset.g=v?'b':'f';drag(t,h)})}
+if(i==6){let nx=1;shuf(Array.from({length:n},(_,k)=>k+1)).forEach((v,k)=>{const t=make(v,k,n);Object.assign(t.style,{background:'var(--sun)',color:'#1d3557',fontWeight:'700',fontSize:parseFloat(t.style.width)*.55+'px'});
+t.oncontextmenu=e=>e.preventDefault();t.onclick=()=>{if(v==nx){nx++;pop(t);hit();if(nx<=n)say('ต่อไปกดเลข '+nx)}else wrong(t,'หาเลข '+nx+' ก่อนนะ')}})}
+if(i==4){const H=1800+dif*1000,N=12+dif*6,s=document.createElement('div');s.id='sb';const p=document.createElement('div');p.id='path';p.style.height=H+'px';
+for(let k=-1;k<N;k++){const e=document.createElement('span');e.textContent=k<0?'🐒':['☁️','🌳','🦋','🌻','🐦'][k%5];e.style.left=(k<0?8:5+Math.random()*80)+'%';e.style.top=(k<0?12:100+k*(H-350)/N)+'px';p.appendChild(e)}
+const g=document.createElement('button');g.id='gift';g.textContent='🎁';g.setAttribute('aria-label','ของขวัญ');p.appendChild(g);s.appendChild(p);stage.appendChild(s);
+const h=document.createElement('div');h.id='hint5';h.textContent='⬇️';stage.appendChild(h);let ph=0;
+g.onclick=()=>{if(ph)return;ph=1;g.textContent='🎉';g.style.animation='none';h.textContent='⬆️';hit();say('เก่งมาก! ตอนนี้เลื่อนกลับขึ้นไปบนสุดนะ')};
+s.onscroll=()=>{if(ph==1&&s.scrollTop<15){ph=2;hit()}}}}
+function tick(now){raf=requestAnimationFrame(tick);const dt=lt?Math.min(.05,(now-lt)/1000):0;lt=now;
+mvs=mvs.filter(t=>t.isConnected&&!t.classList.contains('pop'));const W=stage.clientWidth,H=stage.clientHeight;
+mvs.forEach(t=>{if(t._x==null){t._x=t.offsetLeft;t._y=t.offsetTop}
+t._x+=t._v[0]*dt;t._y+=t._v[1]*dt;const mx=W-t.offsetWidth,my=H-t.offsetHeight-26;
+if(t._x<0){t._x=0;t._v[0]=Math.abs(t._v[0])}if(t._x>mx){t._x=mx;t._v[0]=-Math.abs(t._v[0])}
+if(t._y<0){t._y=0;t._v[1]=Math.abs(t._v[1])}if(t._y>my){t._y=my;t._v[1]=-Math.abs(t._v[1])}
+t.style.left=t._x+'px';t.style.top=t._y+'px'})}
+let askDel=0;
+function panel(){const nm=name(),r=S.s[nm]||{},m=document.createElement('div');m.className='modal';askDel=0;
+let h='<div class="box"><h2>📊 คะแนนของ '+esc(nm)+'</h2><table><tr><th>ด่าน</th>'+D.map(d=>'<th>'+d.e+' '+d.n+'</th>').join('')+'</tr>'+L.map((l,i)=>'<tr><td>'+l.ic+' '+l.n+'</td>'+D.map((d,j)=>{const x=r[i+'-'+j];return'<td>'+(x?'⭐'.repeat(x.st)+'<br>'+x.t+' วินาที':'–')+'</td>'}).join('')+'</tr>').join('')+'</table><h2>🏫 อันดับของห้อง (รวมดาว)</h2><table>';
+Object.entries(S.s).map(([n,r])=>[n,Object.values(r).reduce((a,x)=>a+x.st,0)]).sort((a,b)=>b[1]-a[1]).forEach((x,k)=>h+='<tr><td>'+(k+1)+'</td><td>'+esc(x[0])+'</td><td>⭐ '+x[1]+'</td></tr>');
+m.innerHTML=h+'</table></div>';const bx=m.firstChild,c=document.createElement('button');c.className='big';c.textContent='ปิด';c.onclick=()=>m.remove();
+const d=document.createElement('button');d.className='sm';d.textContent='🗑️ ลบข้อมูลของ '+nm;d.onclick=()=>{if(!askDel){askDel=1;d.textContent='กดอีกครั้งเพื่อยืนยันการลบ';return}delete S.s[nm];save();names();tabs();m.remove()};
+bx.append(c,document.createTextNode(' '),d);document.body.appendChild(m);c.focus()}
+$('#sc').onclick=panel;$('#nm').onchange=()=>{S.last=name();save();tabs()};
+$('#nm').value=S.last||'';names();go(0);
+</script>
+</body>
+</html>
